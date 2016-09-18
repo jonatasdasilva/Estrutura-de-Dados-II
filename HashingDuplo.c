@@ -7,16 +7,21 @@
 //Variável global para o arquivo
 FILE *tabela_hash
 
-typedef struct HASHING
+typedef struct Hashing
 {
 	int chave;
 	char nome[20];
 	int idade;
-}dados, *Dados;
+}hashing, *Dados;
 /*Funcção que checa as chaves existentes no arquivo, em caso de já existir não permite a inserção*/
 _Bool verifica_chaves(int id)
 {
+	int i;
+	hashing h = (hashing) malloc (sizeof(struct Hashing));
 
+	for ()
+	fread(&i, sizeof(int), 1, tabela_hash);
+	if ()
 }
 /*Função que retorna o máximo entre {[chave/TAMANHO_ARQUIVO], 1}*/
 int max (float div, int _1)
@@ -41,12 +46,12 @@ int hash (int chave)
 {
 	int _1 = h1(chave);
 	int _2 = h2(chave);
-	if (verifica_chaves(_1))
+	if (verifica_chaves(_1, chave))
 	{
 		for (int i = 0; i < TAMANHO_ARQUIVO; i++)
 		{
 			int _3 = (_1 + i * _2);
-			if (verifica_chaves(_3))
+			if (verifica_chaves(_3, chave))
 				return _3;
 		}
 	}
@@ -56,25 +61,77 @@ int hash (int chave)
 /*Função que imprime todo o registro em ordem crescente de índice*/
 void imprime_hash()
 {
+	int chave;
+	int id;
+	hashing chave = (hashing) malloc (sizeof(struct Hashing));
 
+	scanf(" %d\n", &chave);
+	id = hash(chave);
+	/*imprime o Hash procurado se existir*/
+	fread(&chave, sizeof(struct Hashing, 1, tabela_hash));
+	rewind(tabela_hash);
+	printf("%d\n", &chave.chave);
+	printf("%s\n", chave.nome);
+	printf("%s\n", chave.idade);
 }
-
-/*Função que faz a inserção no arquivo*/
-_Bool inseri_arquivo()
+/*Função que imprime todo o arquivo*/
+_Bool imprime_arquivo()
 {
-	tabela_hash = fopen("Hashing.bin", "wb"); // Cria um arquivo binário para gravação
-	fwrite()
+	int id;
+	hashing h = (hashing) malloc (sizeof(struct Hashing));
+
+	while (!(feof(tabela_hash)))
+	{
+		fread(&id, sizeof(int), 1, tabela_hash);
+		fread(&h, sizeof(struct Hashing), 1, tabela_hash);
+		printf("%d\n", &chave.chave);
+		printf("%s\n", chave.nome);
+		printf("%s\n", chave.idade);
+	}
+}
+/*Função que faz a inserção no arquivo*/
+_Bool inseri_hash()
+{
+	hashing chaves = (hashing) malloc(sizeof(struct Hashing))
+	//alocar nova estrutura;
+	scanf(" %d", &chaves.chave);
+	scanf(" %s", chaves.nome);
+	scanf(" %d", &chaves.idade);
+	i = hash(chaves.chave);
+	if (!(verifica_chaves(i, chaves[i].chave))
+	{
+		//se a chave não existir inserie-a no arquivo
+		fwrite(&chaves, sizeof(struct Hashing), 1, tabela_hash);
+	}
+	else
+		printf("chave ja existente: %s\n", chaves[i].chave);
+	//em caso de já existir imprimi a string acima;
+	free(chaves);
+	rewind(tabela_hash);
+}
+/*Função que inicializa o arquivo*/
+void inicializa_arquivo()
+{
+	hashing h = (hashing) malloc (sizeof(struct Hashing));
+	h.chave = -1;
+	for (int i = 0; i < TAMANHO_ARQUIVO; i++)
+	{
+		fwrite(&i, sizeof(int), 1, tabela_hash);
+		fwrite(&h, sizeof(struct Hashing), 1, tabela_hash);
+	}
+	free(h);
 }
 
 //Principal
 int main ()
 {
-	HASHING chaves[TAMANHO_ARQUIVO];
+	//HASHING chaves[TAMANHO_ARQUIVO];
 	int i;
 	//Variáveis se for necessário para inserção no registro;
 	int id;
 	char pessoa;
-	int anos;
+	int idade;
+	tabela_hash = fopen("Hashing", "w+b"); // Cria um arquivo binário para gravação
 
 	do
 	{
@@ -82,28 +139,14 @@ int main ()
 
 		if (opt == 'i')
 		{
-			//alocar nova estrutura;
-			scanf( "%d", &chaves[i].chave);
-			scanf( "%s", chaves[i].nome);
-			scanf( "%d", chaves[i].idade);
-			i = hash(chaves[i].chave);
-			if (!(verifica_chaves(chaves[i].chave))
-			{
-				//se a chave não existir inserie-a no arquivo
-				inseri_arquivo();
-			}
-			else
-				printf("chave ja existente: %s\n", chaves[i].chave);
-			//em caso de já existir imprimi a string acima;
+			inseri_hash();
 		}
 		else if (opt == 'c')
 		{
 			scanf( "%d", &id);
 			if ((verifica_chaves(id))
 			{
-				printf("chave: %d\n", chaves[i].chave);
-				printf("%s\n", chaves[i].nome);
-				printf("%d\n", chaves[i].idade);
+				imprime_hash(id);
 			}
 			else
 				printf("’chave nao encontrada: %d\n", chaves[i].chave);
@@ -127,6 +170,6 @@ int main ()
 		}
 
 	}while (opt == 'e');
-
+	fclose(tabela_hash);
 	return 0;
 }
