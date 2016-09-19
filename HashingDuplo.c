@@ -6,6 +6,7 @@
 #define TAMANHO_ARQUIVO 11
 //Variável global para o arquivo
 FILE *tabela_hash
+int i_hash;
 
 typedef struct Hashing
 {
@@ -14,14 +15,43 @@ typedef struct Hashing
 	int idade;
 }hashing, *Dados;
 /*Funcção que checa as chaves existentes no arquivo, em caso de já existir não permite a inserção*/
-_Bool verifica_chaves(int id)
+_Bool verifica_chaves(int id, int chave)
 {
 	int i;
 	hashing h = (hashing) malloc (sizeof(struct Hashing));
-
-	for ()
 	fread(&i, sizeof(int), 1, tabela_hash);
-	if ()
+	if (i == id)
+	{
+		fread(&h, sizeof(hashing), 1, tabela_hash);
+		if (h.chave == -1)
+		{
+			free(h);
+			return false;
+		}
+	}
+	free(h);
+	return true;
+}
+//Encontra a posição exata de inserção após checagem na função hash.
+_Bool next_position(int id)
+{
+	long int next = (sizeof(int)+id*sizeof(struct Hashing));
+	if (fseek(tabela_hash, next, SEEK_SET))
+		return true;
+	//int i, j;
+	//hashing h = (hashing) malloc (sizeof(struct Hashing));
+	//for (j = 0; j <= id; j++)
+	//{
+	//	fread(&i, sizeof(int), 1, tabela_hash);
+	//	fread(&h, sizeof(hashing), 1, tabela_hash);
+	//	if (id == i)
+	//	{
+	//		free(h);
+	//		return true;
+	//	}
+	//}
+	//free(h);
+	dreturn false;
 }
 /*Função que retorna o máximo entre {[chave/TAMANHO_ARQUIVO], 1}*/
 int max (float div, int _1)
@@ -39,7 +69,7 @@ int h1 (int chave)
 /*Função que calcula o h2*/
 int h2 (int chave)
 {
-	return (max((chave/TAMANHO_ARQUIVO), 1));
+	return ((int)max((chave/TAMANHO_ARQUIVO), 1));
 }
 /*Função que retorna o valor do hash da chave.*/
 int hash (int chave)
@@ -50,23 +80,36 @@ int hash (int chave)
 	{
 		for (int i = 0; i < TAMANHO_ARQUIVO; i++)
 		{
-			int _3 = (_1 + i * _2);
+			int _3 = ((_1 + i * _2) % TAMANHO_ARQUIVO);
 			if (verifica_chaves(_3, chave))
+			{
+				i_hash = i;
+				rewind(tabela_hash);
 				return _3;
+			}
 		}
 	}
-	else
-		return _1;
+	rewind(tabela_hash);
+	return _1;
+}
+
+int consulta (int chave)
+{
+	int i, j;
+	hashing h = (hashing) malloc (sizeof(struct Hashing));
+	for (i = 0; i < TAMANHO_ARQUIVO; i++)
+	fread(&i, sizeof(int), 1, tabela_hash);
+	fread(&h, sizeof(hashing), 1, tabela_hash);
 }
 /*Função que imprime todo o registro em ordem crescente de índice*/
 void imprime_hash()
 {
 	int chave;
-	int id;
+	int id, _1, _3;
 	hashing chave = (hashing) malloc (sizeof(struct Hashing));
 
 	scanf(" %d\n", &chave);
-	id = hash(chave);
+	_1 = h1(chave);
 	/*imprime o Hash procurado se existir*/
 	fread(&chave, sizeof(struct Hashing, 1, tabela_hash));
 	rewind(tabela_hash);
@@ -84,7 +127,10 @@ _Bool imprime_arquivo()
 	{
 		fread(&id, sizeof(int), 1, tabela_hash);
 		fread(&h, sizeof(struct Hashing), 1, tabela_hash);
-		printf("%d\n", &chave.chave);
+		if (chave.chave == -1)
+			printf("\n");
+		else
+			printf("%d\n", &chave.chave);
 		printf("%s\n", chave.nome);
 		printf("%s\n", chave.idade);
 	}
@@ -97,10 +143,13 @@ _Bool inseri_hash()
 	scanf(" %d", &chaves.chave);
 	scanf(" %s", chaves.nome);
 	scanf(" %d", &chaves.idade);
-	i = hash(chaves.chave);
-	if (!(verifica_chaves(i, chaves[i].chave))
-	{
-		//se a chave não existir inserie-a no arquivo
+	int i = hash(chaves.chave);
+	//encontra a posisão exata da inserção.
+	next_position((i - 1));
+	//inserie no arquivo a chave não existente.
+	int j;
+	fread(&j, sizeof(int), 1, tabela_hash);
+	if (j == i)
 		fwrite(&chaves, sizeof(struct Hashing), 1, tabela_hash);
 	}
 	else
@@ -121,11 +170,14 @@ void inicializa_arquivo()
 	}
 	free(h);
 }
-
+/*Função que remove registro*/
+_Bool remove_registro()
+{
+	
+}
 //Principal
 int main ()
 {
-	//HASHING chaves[TAMANHO_ARQUIVO];
 	int i;
 	//Variáveis se for necessário para inserção no registro;
 	int id;
@@ -135,15 +187,14 @@ int main ()
 
 	do
 	{
-		scanf ( "%c", &opt);
-
+		scanf (" %c", &opt);
 		if (opt == 'i')
 		{
 			inseri_hash();
 		}
 		else if (opt == 'c')
 		{
-			scanf( "%d", &id);
+			scanf(" %d", &id);
 			if ((verifica_chaves(id))
 			{
 				imprime_hash(id);
@@ -153,7 +204,7 @@ int main ()
 		}
 		else if (opt == 'r')
 		{
-			scanf( "%d", &id);
+			scanf(" %d", &id);
 			if ((verifica_chaves(id))
 			{
 				//se existir remove do registro e não gera saídas;
@@ -168,7 +219,6 @@ int main ()
 			//imprime todo o registro em sequência crescente até tamanho-1.
 			imprime_hash();
 		}
-
 	}while (opt == 'e');
 	fclose(tabela_hash);
 	return 0;
