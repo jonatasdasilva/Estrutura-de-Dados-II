@@ -5,8 +5,10 @@
 
 #define TAMANHO_ARQUIVO 11
 //Variável global para o arquivo
-FILE *tabela_hash
+FILE *tabela_hash;
+
 int i_hash;
+int id_chave = -1;
 
 typedef struct Hashing
 {
@@ -17,41 +19,29 @@ typedef struct Hashing
 /*Funcção que checa as chaves existentes no arquivo, em caso de já existir não permite a inserção*/
 _Bool verifica_chaves(int id, int chave)
 {
-	int i;
+	long int next = (id * sizeof(struct Hashing));
 	hashing h = (hashing) malloc (sizeof(struct Hashing));
-	fread(&i, sizeof(int), 1, tabela_hash);
-	if (i == id)
+	fread(&h, sizeof(hashing), 1, tabela_hash);
+	if ((h.chave == -1) || (h.chave == chave))
 	{
-		fread(&h, sizeof(hashing), 1, tabela_hash);
-		if (h.chave == -1)
+		free(h);
+		if (h.chave == chave)
 		{
 			free(h);
-			return false;
+			id_chave = id;
 		}
-	}
+		return false;
+	}                                                                                                                                                                        
 	free(h);
 	return true;
 }
 //Encontra a posição exata de inserção após checagem na função hash.
 _Bool next_position(int id)
 {
-	long int next = (sizeof(int)+id*sizeof(struct Hashing));
+	long int next = (id * sizeof(struct Hashing));
 	if (fseek(tabela_hash, next, SEEK_SET))
 		return true;
-	//int i, j;
-	//hashing h = (hashing) malloc (sizeof(struct Hashing));
-	//for (j = 0; j <= id; j++)
-	//{
-	//	fread(&i, sizeof(int), 1, tabela_hash);
-	//	fread(&h, sizeof(hashing), 1, tabela_hash);
-	//	if (id == i)
-	//	{
-	//		free(h);
-	//		return true;
-	//	}
-	//}
-	//free(h);
-	dreturn false;
+	return false;
 }
 /*Função que retorna o máximo entre {[chave/TAMANHO_ARQUIVO], 1}*/
 int max (float div, int _1)
@@ -95,10 +85,13 @@ int hash (int chave)
 
 int consulta (int chave)
 {
-	int i, j;
-	hashing h = (hashing) malloc (sizeof(struct Hashing));
-	for (i = 0; i < TAMANHO_ARQUIVO; i++)
-	fread(&i, sizeof(int), 1, tabela_hash);
+	struct Hashing h = malloc (sizeof(struct Hashing));
+	int id = hash(chave);
+	if (id_chave != -1)
+		id = id_chave;
+	id_chave = -1;
+	long int next = (id * sizeof(struct Hashing));
+	fseek(tabela_hash, next, SEEK_SET)
 	fread(&h, sizeof(hashing), 1, tabela_hash);
 }
 /*Função que imprime todo o registro em ordem crescente de índice*/
@@ -138,7 +131,7 @@ _Bool imprime_arquivo()
 /*Função que faz a inserção no arquivo*/
 _Bool inseri_hash()
 {
-	hashing chaves = (hashing) malloc(sizeof(struct Hashing))
+	hashing chaves = malloc(sizeof(struct Hashing));
 	//alocar nova estrutura;
 	scanf(" %d", &chaves.chave);
 	scanf(" %s", chaves.nome);
@@ -150,10 +143,14 @@ _Bool inseri_hash()
 	int j;
 	fread(&j, sizeof(int), 1, tabela_hash);
 	if (j == i)
+	{
 		fwrite(&chaves, sizeof(struct Hashing), 1, tabela_hash);
+		id_chave = -1;
 	}
 	else
-		printf("chave ja existente: %s\n", chaves[i].chave);
+	{
+		printf("chave ja existente: %s\n", chaves.chave);
+	}
 	//em caso de já existir imprimi a string acima;
 	free(chaves);
 	rewind(tabela_hash);
@@ -161,9 +158,10 @@ _Bool inseri_hash()
 /*Função que inicializa o arquivo*/
 void inicializa_arquivo()
 {
-	hashing h = (hashing) malloc (sizeof(struct Hashing));
+	int i;
+	hashing h = malloc (sizeof(struct Hashing));
 	h.chave = -1;
-	for (int i = 0; i < TAMANHO_ARQUIVO; i++)
+	for (i = 0; i < TAMANHO_ARQUIVO; i++)
 	{
 		fwrite(&i, sizeof(int), 1, tabela_hash);
 		fwrite(&h, sizeof(struct Hashing), 1, tabela_hash);
@@ -171,17 +169,15 @@ void inicializa_arquivo()
 	free(h);
 }
 /*Função que remove registro*/
-_Bool remove_registro()
-{
+//_Bool remove_registro()
+//{
 	
-}
+//}
 //Principal
 int main ()
 {
-	int i;
 	//Variáveis se for necessário para inserção no registro;
 	int id;
-	char pessoa;
 	int idade;
 	tabela_hash = fopen("Hashing", "w+b"); // Cria um arquivo binário para gravação
 
@@ -195,7 +191,7 @@ int main ()
 		else if (opt == 'c')
 		{
 			scanf(" %d", &id);
-			if ((verifica_chaves(id))
+			if ((consulta(id))
 			{
 				imprime_hash(id);
 			}
